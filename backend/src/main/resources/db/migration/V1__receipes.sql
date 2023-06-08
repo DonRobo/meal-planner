@@ -5,9 +5,9 @@ CREATE TABLE recipe
     description TEXT,
     image_url   TEXT,
     link        TEXT,
-    prep_time   TEXT,
-    cook_time   TEXT,
-    total_time  TEXT
+    prep_time   INT,
+    cook_time   INT,
+    total_time  INT
 );
 
 CREATE TABLE ingredient
@@ -26,7 +26,7 @@ CREATE TABLE nutrition_info
     fat           REAL,
     saturated_fat REAL,
     protein       REAL,
-    carbohydrates REAL,
+    carbs         REAL,
     sugar         REAL,
     salt          REAL
 );

@@ -11,7 +11,7 @@ fun JNutritionInfoRecord?.toNutritionData(): NutritionData {
         fat = this.fat,
         saturatedFat = this.saturatedFat,
         protein = this.protein,
-        carbs = this.carbohydrates,
+        carbs = this.carbs,
         sugar = this.sugar,
         salt = this.salt,
     )

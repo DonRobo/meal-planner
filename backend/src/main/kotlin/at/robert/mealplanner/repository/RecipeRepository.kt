@@ -62,4 +62,43 @@ class RecipeRepository(
             .mapValues { it.value.into(ni) }
     }
 
+    fun upsertRecipe(
+        id: Int?,
+        name: String,
+        description: String?,
+        imageUrl: String?,
+        link: String?,
+        prepTime: Int?,
+        cookTime: Int?,
+        totalTime: Int?
+    ): JRecipeRecord {
+        val record = ctx.newRecord(r).apply {
+            this.name = name
+            this.description = description
+            this.imageUrl = imageUrl
+            this.link = link
+            this.prepTime = prepTime
+            this.cookTime = cookTime
+            this.totalTime = totalTime
+        }
+
+        return if (id != null)
+            ctx.update(r)
+                .set(record)
+                .where(r.ID.eq(id))
+                .returning().fetchOne()!!
+        else
+            ctx.insertInto(r)
+                .set(record)
+                .returning().fetchOne()!!
+    }
+
+    fun getRecipeByUrl(url: String): JRecipeRecord {
+        TODO("Not yet implemented")
+    }
+
+    fun getIngredientByName(ingredientName: String): JIngredientRecord {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -4,11 +4,14 @@ data class Recipe(
     val id: Int,
     val url: String?,
     val name: String,
-    val description: String,
+    val description: String?,
     val image: String?,
     val steps: List<RecipeStep>,
     val ingredients: List<RecipeIngredient>,
     val nutrition: NutritionData,
+    val prepTime: Int?,
+    val cookTime: Int?,
+    val totalTime: Int?,
 )
 
 data class RecipeStep(
@@ -18,14 +21,14 @@ data class RecipeStep(
 
 data class RecipeIngredient(
     val ingredient: Ingredient,
-    val amount: String,
+    val quantity: String,
     val unit: String,
 )
 
 data class Ingredient(
     val id: Int,
     val name: String,
-    val image: String?,
+    val imageUrl: String?,
     val nutrition: NutritionData,
 )
 

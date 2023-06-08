@@ -41,8 +41,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
-    implementation("org.jsoup:jsoup:1.15.4")
-    implementation("com.google.ortools:ortools-java:9.6.2534")
+    implementation("org.jsoup:jsoup:1.16.1")
 
     jooqGenerator("org.postgresql:postgresql:42.6.0")
 

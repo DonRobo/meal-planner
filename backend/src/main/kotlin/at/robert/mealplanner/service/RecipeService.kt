@@ -1,9 +1,6 @@
 package at.robert.mealplanner.service
 
-import at.robert.mealplanner.data.Ingredient
-import at.robert.mealplanner.data.Recipe
-import at.robert.mealplanner.data.RecipeIngredient
-import at.robert.mealplanner.data.RecipeStep
+import at.robert.mealplanner.data.*
 import at.robert.mealplanner.mapper.toNutritionData
 import at.robert.mealplanner.repository.RecipeRepository
 import org.springframework.stereotype.Service
@@ -28,13 +25,13 @@ class RecipeService(
             val ingredientDto = Ingredient(
                 id = ingredient.id,
                 name = ingredient.name,
-                image = ingredient.imageUrl,
+                imageUrl = ingredient.imageUrl,
                 nutrition = nutrition,
             )
 
             RecipeIngredient(
                 ingredient = ingredientDto,
-                amount = recipeIngredient.quantity,
+                quantity = recipeIngredient.quantity,
                 unit = recipeIngredient.unit,
             )
         }
@@ -55,10 +52,39 @@ class RecipeService(
             nutrition = recipeNutrition.toNutritionData(),
             ingredients = ingredientDtos,
             steps = stepDtos,
+            prepTime = recipe.prepTime,
+            cookTime = recipe.cookTime,
+            totalTime = recipe.totalTime,
         )
     }
 
-    fun importRecipe(url: String): Recipe {
+    fun createRecipe(recipe: Recipe): Int {
+        val existingId = if (recipe.url != null) {
+            recipeRepository.getRecipeByUrl(recipe.url).id
+        } else {
+            null
+        }
+
+        val recipeRecord = recipeRepository.upsertRecipe(
+            id = existingId,
+            name = recipe.name,
+            description = recipe.description,
+            imageUrl = recipe.image,
+            link = recipe.url,
+            prepTime = recipe.prepTime,
+            cookTime = recipe.cookTime,
+            totalTime = recipe.totalTime,
+        )
+
+        return recipeRecord.id
+    }
+
+    fun getOrCreateIngredient(ingredientName: String): Ingredient {
+        val existing = recipeRepository.getIngredientByName(ingredientName)
+        TODO()
+    }
+
+    fun getOrCreateNutritionData(nutritionData: NutritionData): NutritionData {
         TODO("Not yet implemented")
     }
 
