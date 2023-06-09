@@ -197,4 +197,10 @@ class RecipeRepository(
             .execute()
     }
 
+    fun listRecipes(): List<JRecipeRecord> {
+        return ctx.selectFrom(r)
+            .orderBy(r.NAME)
+            .fetch()
+    }
+
 }

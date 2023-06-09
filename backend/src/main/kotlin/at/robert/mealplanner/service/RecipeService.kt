@@ -50,7 +50,7 @@ class RecipeService(
             url = recipe.link,
             name = recipe.name,
             description = recipe.description,
-            image = recipe.imageUrl,
+            imageUrl = recipe.imageUrl,
             nutrition = recipeNutrition.toNutritionData(),
             ingredients = ingredientDtos,
             steps = stepDtos,
@@ -73,7 +73,7 @@ class RecipeService(
             id = existingId,
             name = recipe.name,
             description = recipe.description,
-            imageUrl = recipe.image,
+            imageUrl = recipe.imageUrl,
             link = recipe.url,
             prepTime = recipe.prepTime,
             cookTime = recipe.cookTime,
@@ -167,6 +167,18 @@ class RecipeService(
         } else {
             nutritionData
         }
+    }
+
+    fun listRecipes(): List<SparseRecipe> {
+        return recipeRepository.listRecipes()
+            .map {
+                SparseRecipe(
+                    id = it.id,
+                    name = it.name,
+                    description = it.description,
+                    imageUrl = it.imageUrl,
+                )
+            }
     }
 
     private fun NutritionData?.persisted(): NutritionData = getOrCreateNutritionData(this)

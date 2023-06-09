@@ -49,7 +49,7 @@ class HelloFreshImporter(
             name = title,
             description = description,
             url = url,
-            image = null, //TODO
+            imageUrl = null, //TODO
             steps = steps,
             ingredients = ingredients.map { (ingredientName, amount) ->
                 val split = amount.split(" ")

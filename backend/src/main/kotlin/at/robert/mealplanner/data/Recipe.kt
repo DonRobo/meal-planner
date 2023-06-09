@@ -5,13 +5,20 @@ data class Recipe(
     val url: String?,
     val name: String,
     val description: String?,
-    val image: String?,
+    val imageUrl: String?,
     val steps: List<RecipeStep>,
     val ingredients: List<RecipeIngredient>,
     val nutrition: NutritionData,
     val prepTime: Int?,
     val cookTime: Int?,
     val totalTime: Int?,
+)
+
+data class SparseRecipe(
+    val id: Int,
+    val name: String,
+    val description: String?,
+    val imageUrl: String?,
 )
 
 data class RecipeStep(
