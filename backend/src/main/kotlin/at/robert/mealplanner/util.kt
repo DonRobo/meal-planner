@@ -1,5 +1,7 @@
 package at.robert.mealplanner
 
+import org.jooq.Condition
+import org.jooq.Field
 import org.jooq.Select
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -30,4 +32,12 @@ fun String.getUriParameters(): Map<String, String> {
 
 inline fun <reified T> Select<*>.fetchInto(): List<T> {
     return this.fetchInto(T::class.java)
+}
+
+fun <T> Field<T>.eqOrIsNull(value: T?): Condition {
+    return if (value == null) {
+        this.isNull
+    } else {
+        this.eq(value)
+    }
 }

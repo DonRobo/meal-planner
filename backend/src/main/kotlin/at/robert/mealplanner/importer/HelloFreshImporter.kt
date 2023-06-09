@@ -45,7 +45,7 @@ class HelloFreshImporter(
         }
 
         val recipe = Recipe(
-            id = 0,
+            id = -1,
             name = title,
             description = description,
             url = url,
@@ -54,12 +54,18 @@ class HelloFreshImporter(
             ingredients = ingredients.map { (ingredientName, amount) ->
                 val split = amount.split(" ")
                 RecipeIngredient(
-                    ingredient = recipeService.getOrCreateIngredient(ingredientName),
-                    quantity = split[0],
+                    ingredient = recipeService.getOrCreateIngredient(
+                        ingredientName = ingredientName,
+                        vegetarian = null, //TODO
+                        vegan = null, //TODO
+                        imageUrl = null, //TODO
+                        nutritionData = null, //TODO
+                    ),
+                    quantity = split[0].toFloat() / portions,
                     unit = split[1],
                 )
             },
-            nutrition = recipeService.getOrCreateNutritionData(NutritionData()),
+            nutrition = recipeService.getOrCreateNutritionData(NutritionData()), //TODO
             prepTime = null, //TODO
             cookTime = null,
             totalTime = null, //TODO

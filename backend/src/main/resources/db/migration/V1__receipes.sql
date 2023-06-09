@@ -1,25 +1,4 @@
-CREATE TABLE recipe
-(
-    id          SERIAL PRIMARY KEY,
-    name        TEXT NOT NULL,
-    description TEXT,
-    image_url   TEXT,
-    link        TEXT,
-    prep_time   INT,
-    cook_time   INT,
-    total_time  INT
-);
-
-CREATE TABLE ingredient
-(
-    id         SERIAL PRIMARY KEY,
-    name       TEXT UNIQUE NOT NULL,
-    vegetarian BOOLEAN,
-    vegan      BOOLEAN,
-    image_url  TEXT
-);
-
-CREATE TABLE nutrition_info
+CREATE TABLE nutrition_data
 (
     id            SERIAL PRIMARY KEY,
     calories      INTEGER,
@@ -28,21 +7,31 @@ CREATE TABLE nutrition_info
     protein       REAL,
     carbs         REAL,
     sugar         REAL,
-    salt          REAL
+    salt          REAL,
+    UNIQUE (calories, fat, saturated_fat, protein, carbs, sugar, salt)
 );
 
-CREATE TABLE recipe_nutrition_info
+CREATE TABLE recipe
 (
-    recipe_id         INTEGER REFERENCES recipe (id)         NOT NULL,
-    nutrition_info_id INTEGER REFERENCES nutrition_info (id) NOT NULL,
-    PRIMARY KEY (recipe_id, nutrition_info_id)
+    id                SERIAL PRIMARY KEY,
+    name              TEXT                                   NOT NULL,
+    description       TEXT,
+    image_url         TEXT,
+    link              TEXT,
+    prep_time         INT,
+    cook_time         INT,
+    total_time        INT,
+    nutrition_data_id INTEGER REFERENCES nutrition_data (id) NOT NULL
 );
 
-CREATE TABLE ingredient_nutrition_info
+CREATE TABLE ingredient
 (
-    ingredient_id     INTEGER REFERENCES ingredient (id)     NOT NULL,
-    nutrition_info_id INTEGER REFERENCES nutrition_info (id) NOT NULL,
-    PRIMARY KEY (ingredient_id, nutrition_info_id)
+    id                SERIAL PRIMARY KEY,
+    name              TEXT UNIQUE                            NOT NULL,
+    vegetarian        BOOLEAN,
+    vegan             BOOLEAN,
+    image_url         TEXT,
+    nutrition_data_id INTEGER REFERENCES nutrition_data (id) NOT NULL
 );
 
 CREATE TABLE recipe_ingredient
@@ -50,8 +39,8 @@ CREATE TABLE recipe_ingredient
     id            SERIAL PRIMARY KEY,
     recipe_id     INTEGER REFERENCES recipe (id)     NOT NULL,
     ingredient_id INTEGER REFERENCES ingredient (id) NOT NULL,
-    unit          TEXT                               NOT NULL,
-    quantity      TEXT                               NOT NULL
+    quantity      REAL                               NOT NULL,
+    unit          TEXT                               NOT NULL
 );
 
 CREATE TABLE recipe_step

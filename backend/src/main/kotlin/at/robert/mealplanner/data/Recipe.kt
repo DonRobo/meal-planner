@@ -21,7 +21,7 @@ data class RecipeStep(
 
 data class RecipeIngredient(
     val ingredient: Ingredient,
-    val quantity: String,
+    val quantity: Float,
     val unit: String,
 )
 
@@ -30,9 +30,12 @@ data class Ingredient(
     val name: String,
     val imageUrl: String?,
     val nutrition: NutritionData,
+    val vegetarian: Boolean?,
+    val vegan: Boolean?,
 )
 
 data class NutritionData(
+    val id: Int,
     val calories: Int?,
     val fat: Float?,
     val saturatedFat: Float?,
@@ -41,5 +44,5 @@ data class NutritionData(
     val sugar: Float?,
     val salt: Float?,
 ) {
-    constructor() : this(null, null, null, null, null, null, null)
+    constructor() : this(-1, null, null, null, null, null, null, null)
 }
