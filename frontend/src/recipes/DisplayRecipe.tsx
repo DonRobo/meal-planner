@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import {Recipe, RecipeControllerService} from "../generated";
 import {Col} from "react-bootstrap";
 import RPanel from "../lib/RPanel";
@@ -29,17 +29,20 @@ const DisplayRecipe: React.FC = () => {
     }
 
     return (
-        <RPanel title={recipe.name}>
-            <Col sm={4}>
-                {recipe.description}
-            </Col>
-            <Col sm={6}>
-                <ListIngredients recipe={recipe}/>
-            </Col>
-            <Col sm={6}>
-                <ShowSteps recipe={recipe}/>
-            </Col>
-        </RPanel>
+        <div>
+            <Link to="/recipes">Back</Link>
+            <RPanel title={recipe.name}>
+                <Col sm={4}>
+                    {recipe.description}
+                </Col>
+                <Col sm={6}>
+                    <ListIngredients recipe={recipe}/>
+                </Col>
+                <Col sm={6}>
+                    <ShowSteps recipe={recipe}/>
+                </Col>
+            </RPanel>
+        </div>
     );
 };
 
