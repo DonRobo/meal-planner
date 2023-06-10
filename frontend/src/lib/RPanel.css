@@ -1,0 +1,15 @@
+.panel {
+    padding: 1em;
+    margin: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.panel-header {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5em;
+    margin-top: -0.2em;
+}

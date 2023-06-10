@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import {Recipe, RecipeControllerService} from "../generated";
+import {Col} from "react-bootstrap";
+import RPanel from "../lib/RPanel";
+import ListIngredients from "./ListIngredients";
+import ShowSteps from "./ShowSteps";
 
 const DisplayRecipe: React.FC = () => {
     const {id} = useParams<{ id: string }>(); // Access the recipe ID from the URL parameter
@@ -25,11 +29,17 @@ const DisplayRecipe: React.FC = () => {
     }
 
     return (
-        <div>
-            <h1>Recipe Details</h1>
-            <h2>{recipe.name}</h2>
-            <p>{recipe.description}</p>
-        </div>
+        <RPanel title={recipe.name}>
+            <Col sm={4}>
+                {recipe.description}
+            </Col>
+            <Col sm={6}>
+                <ListIngredients recipe={recipe}/>
+            </Col>
+            <Col sm={6}>
+                <ShowSteps recipe={recipe}/>
+            </Col>
+        </RPanel>
     );
 };
 

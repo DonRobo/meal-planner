@@ -2,7 +2,7 @@ import React, {JSX} from 'react';
 import './App.css';
 import {Link, Route, Routes} from "react-router-dom";
 import {RecipeList} from "./recipes/RecipeList";
-import DisplayRecipe from "./recipes/Recipe";
+import DisplayRecipe from "./recipes/DisplayRecipe";
 
 function Home(): JSX.Element {
     return <div>
