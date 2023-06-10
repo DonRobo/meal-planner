@@ -162,7 +162,9 @@ class RecipeRepository(
     }
 
     fun clearStepsForRecipe(recipeId: Int) {
-
+        ctx.deleteFrom(rs)
+            .where(rs.RECIPE_ID.eq(recipeId))
+            .execute()
     }
 
     fun insertRecipeStep(recipeId: Int, stepNumber: Int, description: String, imageUrl: String?) {
