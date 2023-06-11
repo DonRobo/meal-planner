@@ -45,6 +45,27 @@ class HelloFreshImporter(
             RecipeStep(p.text(), image?.attr("src"))
         }
 
+        val nutritionDiv = doc.selectFirst("div[data-test-id='items-per-serving']") ?: error("No nutrition found")
+        val nutritionData = nutritionDiv.select("div[data-test-id='nutrition-step']").map {
+            val name = it.child(0).text()
+            val value = it.child(1).text()
+
+            name to value
+        }.toMap()
+
+        val nd = NutritionData(
+            id = -1,
+            calories = nutritionData["Energie (kcal)"]?.replace(" kcal", "")?.toInt(),
+            fat = nutritionData["Fett"]?.replace(" g", "")?.toFloat(),
+            saturatedFat = nutritionData["davon gesättigte Fettsäuren"]?.replace(" g", "")?.toFloat(),
+            protein = nutritionData["Eiweiß"]?.replace(" g", "")?.toFloat(),
+            carbs = nutritionData["Kohlenhydrate"]?.replace(" g", "")?.toFloat(),
+            sugar = nutritionData["davon Zucker"]?.replace(" g", "")?.toFloat(),
+            salt = nutritionData["Salz"]?.replace(" g", "")?.toFloat(),
+            vegetarian = null, //TODO
+            vegan = null, //TODO
+        )
+
         val recipe = Recipe(
             id = -1,
             name = title,
@@ -64,7 +85,7 @@ class HelloFreshImporter(
                     unit = split[1],
                 )
             },
-            nutritionData = recipeService.getOrCreateNutritionData(NutritionData()), //TODO
+            nutritionData = recipeService.getOrCreateNutritionData(nd),
             prepTime = null, //TODO
             cookTime = null,
             totalTime = null, //TODO
