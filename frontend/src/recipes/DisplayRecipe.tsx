@@ -5,6 +5,7 @@ import {Col} from "react-bootstrap";
 import RPanel from "../lib/RPanel";
 import ListIngredients from "./ListIngredients";
 import ShowSteps from "./ShowSteps";
+import ShowNutritionData from "./ShowNutritionData";
 
 const DisplayRecipe: React.FC = () => {
     const {id} = useParams<{ id: string }>(); // Access the recipe ID from the URL parameter
@@ -34,6 +35,9 @@ const DisplayRecipe: React.FC = () => {
             <RPanel title={recipe.name}>
                 <Col sm={4}>
                     {recipe.description}
+                </Col>
+                <Col sm={4}>
+                    <ShowNutritionData nutritionData={recipe.nutritionData}/>
                 </Col>
                 <Col sm={6}>
                     <ListIngredients recipe={recipe}/>

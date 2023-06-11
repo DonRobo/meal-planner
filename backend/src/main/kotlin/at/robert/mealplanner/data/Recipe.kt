@@ -8,7 +8,7 @@ data class Recipe(
     val imageUrl: String?,
     val steps: List<RecipeStep>,
     val ingredients: List<RecipeIngredient>,
-    val nutrition: NutritionData,
+    val nutritionData: NutritionData,
     val prepTime: Int?,
     val cookTime: Int?,
     val totalTime: Int?,

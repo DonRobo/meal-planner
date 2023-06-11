@@ -4,6 +4,7 @@ import at.robert.mealplanner.data.NutritionData
 import at.robert.mealplanner.data.Recipe
 import at.robert.mealplanner.data.RecipeIngredient
 import at.robert.mealplanner.data.RecipeStep
+import at.robert.mealplanner.parsePortions
 import at.robert.mealplanner.service.RecipeService
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Component
@@ -59,11 +60,11 @@ class HelloFreshImporter(
                         imageUrl = null, //TODO
                         nutritionData = null, //TODO
                     ),
-                    quantity = split[0].toFloat() / portions,
+                    quantity = split[0].parsePortions() / portions,
                     unit = split[1],
                 )
             },
-            nutrition = recipeService.getOrCreateNutritionData(NutritionData()), //TODO
+            nutritionData = recipeService.getOrCreateNutritionData(NutritionData()), //TODO
             prepTime = null, //TODO
             cookTime = null,
             totalTime = null, //TODO

@@ -4,6 +4,7 @@ import at.robert.mealplanner.data.NutritionData
 import at.robert.mealplanner.data.Recipe
 import at.robert.mealplanner.data.RecipeIngredient
 import at.robert.mealplanner.data.RecipeStep
+import at.robert.mealplanner.parsePortions
 import at.robert.mealplanner.service.RecipeService
 import org.jsoup.Jsoup
 import org.springframework.stereotype.Component
@@ -40,7 +41,7 @@ class GuteKuecheImporter(
                     imageUrl = null, //TODO
                     nutritionData = null, //TODO
                 ),
-                quantity = quantity.text().toFloat() / portions,
+                quantity = quantity.text().parsePortions() / portions,
                 unit = unit.text()
             )
         }
@@ -62,7 +63,7 @@ class GuteKuecheImporter(
                 imageUrl = null, //TODO
                 steps = steps,
                 ingredients = ingredients,
-                nutrition = NutritionData(), //TODO
+                nutritionData = NutritionData(), //TODO
                 prepTime = null, //TODO
                 cookTime = null, //TODO
                 totalTime = null, //TODO

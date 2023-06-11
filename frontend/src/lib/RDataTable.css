@@ -1,0 +1,7 @@
+.light-border .row div:not(:last-child) {
+    border-right: 1px solid #ccc;
+}
+
+.light-border .row:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+}

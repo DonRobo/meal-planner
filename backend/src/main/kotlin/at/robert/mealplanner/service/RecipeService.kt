@@ -49,7 +49,7 @@ class RecipeService(
             name = recipe.name,
             description = recipe.description,
             imageUrl = recipe.imageUrl,
-            nutrition = recipeNutrition.toNutritionData(),
+            nutritionData = recipeNutrition.toNutritionData(),
             ingredients = ingredientDtos,
             steps = stepDtos,
             prepTime = recipe.prepTime,
@@ -65,7 +65,7 @@ class RecipeService(
             null
         }
 
-        val nutritionData = recipe.nutrition.persisted()
+        val nutritionData = recipe.nutritionData.persisted()
 
         val recipeRecord = recipeRepository.upsertRecipe(
             id = existingId,

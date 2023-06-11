@@ -41,3 +41,15 @@ fun <T> Field<T>.eqOrIsNull(value: T?): Condition {
         this.eq(value)
     }
 }
+
+fun String.parsePortions(): Float {
+    return when (this) {
+        "1/2", "½" -> 0.5f
+        "1/4", "¼" -> 0.25f
+        "3/4", "¾" -> 0.75f
+        "1/3", "⅓" -> 0.33f
+        "2/3", "⅔" -> 0.66f
+
+        else -> this.toFloat()
+    }
+}
