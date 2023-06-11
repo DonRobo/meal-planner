@@ -15,5 +15,7 @@ fun JNutritionDataRecord?.toNutritionData(): NutritionData {
         carbs = this.carbs,
         sugar = this.sugar,
         salt = this.salt,
+        vegetarian = this.vegetarian,
+        vegan = this.vegan,
     )
 }

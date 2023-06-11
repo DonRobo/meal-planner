@@ -109,15 +109,11 @@ class RecipeRepository(
 
     fun createIngredient(
         name: String,
-        vegetarian: Boolean?,
-        vegan: Boolean?,
         imageUrl: String?,
         nutritionDataId: Int
     ): JIngredientRecord {
         val record = ctx.newRecord(i).apply {
             this.name = name
-            this.vegetarian = vegetarian
-            this.vegan = vegan
             this.imageUrl = imageUrl
             this.nutritionDataId = nutritionDataId
         }
@@ -154,6 +150,8 @@ class RecipeRepository(
             this.carbs = nutritionData.carbs
             this.sugar = nutritionData.sugar
             this.salt = nutritionData.salt
+            this.vegetarian = nutritionData.vegetarian
+            this.vegan = nutritionData.vegan
         }
 
         return ctx.insertInto(nd)

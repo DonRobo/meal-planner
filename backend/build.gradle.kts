@@ -85,7 +85,7 @@ tasks.flywayMigrate {
                 }
                 if (!dbExists) {
                     println("Database $buildDatabaseName does not exist, creating it...")
-                    stmt.execute("CREATE DATABASE $buildDatabaseName WITH OWNER = ${buildProps["build.database.username"]}")
+                    stmt.execute("CREATE DATABASE \"$buildDatabaseName\" WITH OWNER = \"${buildProps["build.database.username"]}\"")
                 }
             }
         }
@@ -155,7 +155,7 @@ openApi {
     outputDir.set(file("$buildDir/docs"))
     apiDocsUrl.set("http://localhost:18080/v3/api-docs")
     outputFileName.set("swagger.json")
-    waitTimeInSeconds.set(10)
+    waitTimeInSeconds.set(30)
     customBootRun {
         environment.put("DB_URL", "jdbc:postgresql://$buildDatabaseHost:$buildDatabasePort/$buildDatabaseName")
         environment.put("DB_USER", buildProps["build.database.username"] as String)

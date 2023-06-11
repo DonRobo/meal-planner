@@ -8,7 +8,9 @@ CREATE TABLE nutrition_data
     carbs         REAL,
     sugar         REAL,
     salt          REAL,
-    UNIQUE (calories, fat, saturated_fat, protein, carbs, sugar, salt)
+    vegan         BOOLEAN,
+    vegetarian    BOOLEAN,
+    UNIQUE (calories, fat, saturated_fat, protein, carbs, sugar, salt, vegan, vegetarian)
 );
 
 CREATE TABLE recipe
@@ -28,8 +30,6 @@ CREATE TABLE ingredient
 (
     id                SERIAL PRIMARY KEY,
     name              TEXT UNIQUE                            NOT NULL,
-    vegetarian        BOOLEAN,
-    vegan             BOOLEAN,
     image_url         TEXT,
     nutrition_data_id INTEGER REFERENCES nutrition_data (id) NOT NULL
 );

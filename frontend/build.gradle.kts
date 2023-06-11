@@ -58,9 +58,11 @@ tasks.register<YarnTask>("build") {
 tasks.register<YarnTask>("yarnAddDependency") {
     group = "yarn"
 
-    val dependency = project.property("dependency") as String?
-    requireNotNull(dependency) { "`dependency` is required" }
-    args.set(listOf("add", dependency, "--save"))
+    if (project.hasProperty("dependency")) {
+        val dependency = project.property("dependency") as String?
+        requireNotNull(dependency) { "`dependency` is required" }
+        args.set(listOf("add", dependency, "--save"))
+    }
 }
 
 tasks.register("clean") {

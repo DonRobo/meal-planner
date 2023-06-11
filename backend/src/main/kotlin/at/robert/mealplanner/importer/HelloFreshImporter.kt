@@ -56,8 +56,6 @@ class HelloFreshImporter(
                 RecipeIngredient(
                     ingredient = recipeService.getOrCreateIngredient(
                         ingredientName = ingredientName,
-                        vegetarian = null, //TODO
-                        vegan = null, //TODO
                         imageUrl = null, //TODO
                         nutritionData = null, //TODO
                     ),

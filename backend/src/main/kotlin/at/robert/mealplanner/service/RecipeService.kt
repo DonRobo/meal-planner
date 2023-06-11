@@ -27,8 +27,6 @@ class RecipeService(
                 name = ingredient.name,
                 imageUrl = ingredient.imageUrl,
                 nutrition = nutrition,
-                vegetarian = ingredient.vegetarian,
-                vegan = ingredient.vegan,
             )
 
             RecipeIngredient(
@@ -98,8 +96,6 @@ class RecipeService(
             else
                 getOrCreateIngredient(
                     ingredientName = recipeIngredient.ingredient.name,
-                    vegetarian = recipeIngredient.ingredient.vegetarian,
-                    vegan = recipeIngredient.ingredient.vegan,
                     imageUrl = recipeIngredient.ingredient.imageUrl,
                     nutritionData = recipeIngredient.ingredient.nutrition,
                 )
@@ -128,15 +124,11 @@ class RecipeService(
             name = ing.name,
             imageUrl = ing.imageUrl,
             nutrition = nutritionData,
-            vegetarian = ing.vegetarian,
-            vegan = ing.vegan,
         )
     }
 
     fun getOrCreateIngredient(
         ingredientName: String,
-        vegetarian: Boolean?,
-        vegan: Boolean?,
         imageUrl: String?,
         nutritionData: NutritionData?,
     ): Ingredient {
@@ -149,8 +141,6 @@ class RecipeService(
 
             val ingredientRecord = recipeRepository.createIngredient(
                 name = ingredientName,
-                vegetarian = vegetarian,
-                vegan = vegan,
                 imageUrl = imageUrl,
                 nutritionDataId = nd.id
             )

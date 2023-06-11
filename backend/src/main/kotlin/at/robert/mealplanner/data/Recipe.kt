@@ -37,8 +37,6 @@ data class Ingredient(
     val name: String,
     val imageUrl: String?,
     val nutrition: NutritionData,
-    val vegetarian: Boolean?,
-    val vegan: Boolean?,
 )
 
 data class NutritionData(
@@ -50,6 +48,8 @@ data class NutritionData(
     val carbs: Float?,
     val sugar: Float?,
     val salt: Float?,
+    val vegetarian: Boolean?,
+    val vegan: Boolean?,
 ) {
-    constructor() : this(-1, null, null, null, null, null, null, null)
+    constructor() : this(-1, null, null, null, null, null, null, null, null, null)
 }
