@@ -3,12 +3,14 @@ import './App.css';
 import {Link, Route, Routes} from "react-router-dom";
 import {RecipeList} from "./recipes/RecipeList";
 import DisplayRecipe from "./recipes/DisplayRecipe";
+import MealPlanner from "./planner/MealPlanner";
 
 function Home(): JSX.Element {
     return <div>
         <h2>Links</h2>
         <ul>
             <li><Link to="/recipes">Recipes</Link></li>
+            <li><Link to="/planner">Meal Planner</Link></li>
         </ul>
     </div>;
 }
@@ -19,6 +21,8 @@ function App() {
                 <Route path="/" element={<Home/>}/>
                 <Route path="/recipes" element={<RecipeList/>}/>
                 <Route path="/recipes/:id" element={<DisplayRecipe/>}/>
+
+                <Route path="/planner" element={<MealPlanner/>}/>
 
                 <Route path="*" element={<div>
                     <h1>404</h1>

@@ -1,0 +1,13 @@
+.calendar {
+    padding: 0.5rem;
+}
+
+.calendar .col:not(:first-child) {
+    border-left: 1px solid #e0e0e0;
+}
+
+.calendar-header {
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
