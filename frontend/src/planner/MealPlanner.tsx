@@ -18,6 +18,7 @@ const MealPlanner: React.FC = () => {
         meals[day].push(newMeal);
         setMeals([...meals]);
     };
+
     const updateMeal = (day: number, mealIndex: number, updatedMeal: Meal) => {
         if (day < 0 || day >= dayCount) throw new Error("Invalid day");
 
