@@ -2,7 +2,7 @@ package at.robert.mealplanner.data
 
 data class Recipe(
     val id: Int,
-    val url: String?,
+    val link: String?,
     val name: String,
     val description: String?,
     val imageUrl: String?,
@@ -40,7 +40,6 @@ data class Ingredient(
 )
 
 data class NutritionData(
-    val id: Int,
     val calories: Int?,
     val fat: Float?,
     val saturatedFat: Float?,
@@ -51,5 +50,5 @@ data class NutritionData(
     val vegetarian: Boolean?,
     val vegan: Boolean?,
 ) {
-    constructor() : this(-1, null, null, null, null, null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null, null, null, null)
 }

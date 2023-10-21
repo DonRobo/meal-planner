@@ -54,7 +54,6 @@ class HelloFreshImporter(
         }.toMap()
 
         val nd = NutritionData(
-            id = -1,
             calories = nutritionData["Energie (kcal)"]?.replace(" kcal", "")?.toInt(),
             fat = nutritionData["Fett"]?.replace(" g", "")?.toFloat(),
             saturatedFat = nutritionData["davon gesättigte Fettsäuren"]?.replace(" g", "")?.toFloat(),
@@ -70,7 +69,7 @@ class HelloFreshImporter(
             id = -1,
             name = title,
             description = description,
-            url = url,
+            link = url,
             imageUrl = null, //TODO
             steps = steps,
             ingredients = ingredients.map { (ingredientName, amount) ->
@@ -85,7 +84,7 @@ class HelloFreshImporter(
                     unit = split[1],
                 )
             },
-            nutritionData = recipeService.getOrCreateNutritionData(nd),
+            nutritionData = nd,
             prepTime = null, //TODO
             cookTime = null,
             totalTime = null, //TODO

@@ -1,64 +1,48 @@
 package at.robert.mealplanner.repository
 
 import at.robbert.mealplanner.jooq.Tables
-import at.robbert.mealplanner.jooq.tables.records.*
-import at.robert.mealplanner.data.NutritionData
-import at.robert.mealplanner.eqOrIsNull
+import at.robbert.mealplanner.jooq.tables.records.JIngredientRecord
+import at.robbert.mealplanner.jooq.tables.records.JRecipeRecord
+import at.robert.mealplanner.data.*
+import at.robert.mealplanner.mapper.IngredientMapper
+import at.robert.mealplanner.mapper.RecipeIngredientMapper
+import at.robert.mealplanner.mapper.RecipeMapper
+import at.robert.mealplanner.mapper.SparseRecipeMapper
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.jooq.DSLContext
+import org.jooq.JSONB
 import org.springframework.stereotype.Repository
 
 @Repository
 class RecipeRepository(
     private val ctx: DSLContext,
+    private val objectMapper: ObjectMapper,
 ) {
     private val r = Tables.RECIPE.`as`("r")
-    private val rs = Tables.RECIPE_STEP.`as`("rs")
     private val ri = Tables.RECIPE_INGREDIENT.`as`("ri")
     private val i = Tables.INGREDIENT.`as`("i")
-    private val nd = Tables.NUTRITION_DATA.`as`("nd")
 
-    fun getRecipe(recipeId: Int): JRecipeRecord? {
-        return ctx.selectFrom(r)
+    private val iMapper = IngredientMapper(i)
+    private val riMapper = RecipeIngredientMapper(ri, iMapper)
+    private val rMapper = RecipeMapper(r, objectMapper)
+    private val sparseRMapper = SparseRecipeMapper(r)
+
+    fun getRecipe(recipeId: Int): Recipe {
+        val recipe = ctx.select(rMapper.fields)
+            .from(r)
             .where(r.ID.eq(recipeId))
-            .fetchOne()
+            .fetchOne(rMapper) ?: error("Recipe not found")
+
+        return recipe.copy(ingredients = getRecipeIngredients(recipeId))
     }
 
-    fun getRecipeSteps(recipeId: Int): List<JRecipeStepRecord> {
-        return ctx.selectFrom(rs)
-            .where(rs.RECIPE_ID.eq(recipeId))
-            .orderBy(rs.STEP_NUMBER)
-            .fetch()
-    }
-
-    fun getRecipeIngredients(recipeId: Int): List<JRecipeIngredientRecord> {
-        return ctx.selectFrom(ri)
+    fun getRecipeIngredients(recipeId: Int): List<RecipeIngredient> {
+        return ctx.select(riMapper.fields)
+            .from(ri)
+            .join(i).on(ri.INGREDIENT_ID.eq(i.ID))
             .where(ri.RECIPE_ID.eq(recipeId))
             .orderBy(ri.INGREDIENT_ID)
-            .fetch()
-    }
-
-    fun getIngredients(ingredientIds: List<Int>): List<JIngredientRecord> {
-        return ctx.selectFrom(i)
-            .where(i.ID.`in`(ingredientIds))
-            .orderBy(i.NAME)
-            .fetch()
-    }
-
-    fun getRecipeNutrition(recipeId: Int): JNutritionDataRecord? {
-        return ctx.select(*nd.fields())
-            .from(nd)
-            .join(r).on(nd.ID.eq(r.NUTRITION_DATA_ID))
-            .where(r.ID.eq(recipeId))
-            .fetchOneInto(nd)
-    }
-
-    fun getIngredientNutritions(ingredientIds: Collection<Int>): Map<Int, JNutritionDataRecord> {
-        return ctx.select(*nd.fields())
-            .from(nd)
-            .join(i).on(nd.ID.eq(i.NUTRITION_DATA_ID))
-            .where(i.ID.`in`(ingredientIds))
-            .fetchInto(nd)
-            .associateBy { it.id }
+            .fetch(riMapper)
     }
 
     fun upsertRecipe(
@@ -70,7 +54,9 @@ class RecipeRepository(
         prepTime: Int?,
         cookTime: Int?,
         totalTime: Int?,
-        nutritionDataId: Int
+        steps: List<RecipeStep>,
+
+        nutritionData: NutritionData,
     ): JRecipeRecord {
         val record = ctx.newRecord(r).apply {
             this.name = name
@@ -80,7 +66,17 @@ class RecipeRepository(
             this.prepTime = prepTime
             this.cookTime = cookTime
             this.totalTime = totalTime
-            this.nutritionDataId = nutritionDataId
+            this.steps = JSONB.jsonb(objectMapper.writeValueAsString(steps))
+
+            this.calories = nutritionData.calories
+            this.fat = nutritionData.fat
+            this.saturatedFat = nutritionData.saturatedFat
+            this.protein = nutritionData.protein
+            this.carbs = nutritionData.carbs
+            this.sugar = nutritionData.sugar
+            this.salt = nutritionData.salt
+            this.vegan = nutritionData.vegan
+            this.vegetarian = nutritionData.vegetarian
         }
 
         return if (id != null)
@@ -94,10 +90,18 @@ class RecipeRepository(
                 .returning().fetchOne()!!
     }
 
-    fun getRecipeByUrl(url: String): JRecipeRecord? {
-        return ctx.selectFrom(r)
+    fun getRecipeIdByUrl(url: String): Int? {
+        return ctx.select(r.ID)
+            .from(r)
             .where(r.LINK.eq(url))
-            .fetchOne()
+            .fetchOne(r.ID)
+    }
+
+    fun getRecipeByUrl(url: String): Recipe? {
+        return ctx.select(rMapper.fields)
+            .from(r)
+            .where(r.LINK.eq(url))
+            .fetchOne(rMapper)
     }
 
     fun getIngredientIdByName(ingredientName: String): Int? {
@@ -110,39 +114,13 @@ class RecipeRepository(
     fun createIngredient(
         name: String,
         imageUrl: String?,
-        nutritionDataId: Int
+
+        nutritionData: NutritionData,
     ): JIngredientRecord {
         val record = ctx.newRecord(i).apply {
             this.name = name
             this.imageUrl = imageUrl
-            this.nutritionDataId = nutritionDataId
-        }
 
-        return ctx.insertInto(i)
-            .set(record)
-            .returning().fetchOne()!!
-    }
-
-    fun getNutritionData(nutritionDataId: Int): JNutritionDataRecord? {
-        return ctx.selectFrom(nd)
-            .where(nd.ID.eq(nutritionDataId))
-            .fetchOne()
-    }
-
-    fun findByNutritionData(nutritionData: NutritionData): JNutritionDataRecord? {
-        return ctx.selectFrom(nd)
-            .where(nd.CALORIES.eqOrIsNull(nutritionData.calories))
-            .and(nd.FAT.eqOrIsNull(nutritionData.fat))
-            .and(nd.SATURATED_FAT.eqOrIsNull(nutritionData.saturatedFat))
-            .and(nd.PROTEIN.eqOrIsNull(nutritionData.protein))
-            .and(nd.CARBS.eqOrIsNull(nutritionData.carbs))
-            .and(nd.SUGAR.eqOrIsNull(nutritionData.sugar))
-            .and(nd.SALT.eqOrIsNull(nutritionData.salt))
-            .fetchOne()
-    }
-
-    fun createNutritionData(nutritionData: NutritionData): JNutritionDataRecord {
-        val record = ctx.newRecord(nd).apply {
             this.calories = nutritionData.calories
             this.fat = nutritionData.fat
             this.saturatedFat = nutritionData.saturatedFat
@@ -150,32 +128,13 @@ class RecipeRepository(
             this.carbs = nutritionData.carbs
             this.sugar = nutritionData.sugar
             this.salt = nutritionData.salt
-            this.vegetarian = nutritionData.vegetarian
             this.vegan = nutritionData.vegan
+            this.vegetarian = nutritionData.vegetarian
         }
 
-        return ctx.insertInto(nd)
+        return ctx.insertInto(i)
             .set(record)
             .returning().fetchOne()!!
-    }
-
-    fun clearStepsForRecipe(recipeId: Int) {
-        ctx.deleteFrom(rs)
-            .where(rs.RECIPE_ID.eq(recipeId))
-            .execute()
-    }
-
-    fun insertRecipeStep(recipeId: Int, stepNumber: Int, description: String, imageUrl: String?) {
-        val record = ctx.newRecord(rs).apply {
-            this.recipeId = recipeId
-            this.stepNumber = stepNumber
-            this.description = description
-            this.imageUrl = imageUrl
-        }
-
-        ctx.insertInto(rs)
-            .set(record)
-            .execute()
     }
 
     fun clearIngredientsForRecipe(recipeId: Int) {
@@ -197,10 +156,18 @@ class RecipeRepository(
             .execute()
     }
 
-    fun listRecipes(): List<JRecipeRecord> {
-        return ctx.selectFrom(r)
+    fun listSparseRecipes(): List<SparseRecipe> {
+        return ctx.select(sparseRMapper.fields)
+            .from(r)
             .orderBy(r.NAME)
-            .fetch()
+            .fetch(sparseRMapper)
+    }
+
+    fun getIngredients(ingredientIds: List<Int>): List<Ingredient> {
+        return ctx.select(iMapper.fields)
+            .from(i)
+            .where(i.ID.`in`(ingredientIds))
+            .fetch(iMapper)
     }
 
 }

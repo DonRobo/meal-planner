@@ -57,7 +57,7 @@ class GuteKuecheImporter(
         return recipeService.createRecipe(
             Recipe(
                 id = -1,
-                url = url,
+                link = url,
                 name = title,
                 description = description,
                 imageUrl = null, //TODO
