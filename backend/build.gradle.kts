@@ -24,8 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-client-logging-jvm:2.3.0")
-    val ktorVersion = "2.3.0"
+    val ktorVersion = "2.3.5"
 
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -37,13 +36,13 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.postgresql:postgresql")
 
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-core-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio-jvm:$ktorVersion")
+    implementation("io.ktor:ktor-client-logging-jvm:$ktorVersion")
 
     implementation("org.jsoup:jsoup:1.16.1")
 
     jooqGenerator("org.postgresql:postgresql:42.6.0")
-
 }
 
 val buildProps = Properties().also {

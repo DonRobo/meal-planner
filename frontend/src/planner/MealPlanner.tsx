@@ -1,8 +1,9 @@
-import React, {MouseEventHandler} from "react";
+import React, {MouseEventHandler, useEffect} from "react";
 import RCalendar from "../lib/RCalendar";
 import {DateTime} from "luxon";
 import {Col} from "react-bootstrap";
 import "./MealPlanner.css";
+import {PlannedMealControllerService} from "../generated";
 
 interface Meal {
     name: string;
@@ -39,6 +40,26 @@ const MealPlanner: React.FC = () => {
         });
     };
 
+    // Fetch meals from backend using PlannedMealControllerService
+    const fetchMeals = (day: DateTime) => {
+        const meals = PlannedMealControllerService.plannedMealsForDay(day.toISODate()!!);
+        meals.then((meals) => {
+            setMeals((prevMeals) => {
+                const newMeals = [...prevMeals];
+                newMeals[day.diff(DateTime.now(), 'days').days] = meals.map((meal) => {
+                    return {name: meal.data.desiredCalories?.toString() || "Undefined"};
+                });
+                return newMeals;
+            });
+        });
+    }
+
+    useEffect(() => {
+        const today = DateTime.now();
+        for (let i = 0; i < dayCount; i++) {
+            fetchMeals(today.plus({days: i}));
+        }
+    }, []);
 
     return (
         <div>
@@ -86,7 +107,7 @@ const DayContent: React.FC<DayContentProps> = (props) => {
     return <Col>
         {
             props.meals.map((meal, i) => {
-                return <div key={i}>Meal</div>
+                return <div key={i}>{meal.name}</div>
             })
         }
         <div className="add-new-meal" onClick={addNewMeal}>Add new meal</div>

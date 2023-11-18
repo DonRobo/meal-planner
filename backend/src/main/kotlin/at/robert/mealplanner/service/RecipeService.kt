@@ -13,15 +13,11 @@ class RecipeService(
     private val recipeRepository: RecipeRepository,
 ) {
     fun getRecipe(recipeId: Int): Recipe {
-        return recipeRepository.getRecipe(recipeId) ?: error("Recipe not found")
+        return recipeRepository.getRecipe(recipeId)
     }
 
     @Transactional
     fun createRecipe(recipe: Recipe): Int {
-        require(recipe.ingredients != null) {
-            "Recipe must have ingredients"
-        }
-
         val existingId = if (recipe.link != null) {
             recipeRepository.getRecipeIdByUrl(recipe.link)
         } else {
@@ -45,7 +41,7 @@ class RecipeService(
         )
 
         recipeRepository.clearIngredientsForRecipe(recipeRecord.id)
-        recipe.ingredients.forEach { recipeIngredient ->
+        recipe.ingredients!!.forEach { recipeIngredient ->
             val ingredient = if (recipeIngredient.ingredient.id > 0)
                 recipeIngredient.ingredient
             else

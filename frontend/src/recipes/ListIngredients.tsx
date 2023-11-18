@@ -11,7 +11,7 @@ const ListIngredients: React.FC<{ recipe: Recipe }> = ({recipe}) => {
         <Col sm={12}>
             <RSpinner label="Portions" value={portions} onChange={setPortions} min={1}/>
         </Col>
-        {recipe.ingredients.map((ingredient) => (
+        {recipe.ingredients!!.map((ingredient) => (
             <Col sm={12} lg={6} key={ingredient.ingredient.id}>
                 {ingredient.ingredient.name} ({ingredient.quantity * portions} {ingredient.unit})
             </Col>

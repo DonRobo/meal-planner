@@ -57,7 +57,7 @@ class RecipeMapper(
             description = record[r.DESCRIPTION],
             imageUrl = record[r.IMAGE_URL],
             steps = steps,
-            ingredients = emptyList(), // this must be filled later on
+            ingredients = null, // this must be filled later on
             nutritionData = nutritionData,
             prepTime = record[r.PREP_TIME],
             cookTime = record[r.COOK_TIME],
